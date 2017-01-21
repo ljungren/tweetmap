@@ -1,0 +1,61 @@
+body{
+  background:#eee;
+  width:100%;
+  font-family: 'Open Sans', Sans-serif;
+  font-size: 12pt;
+}
+div.err-area div{
+  color:red;
+  font-size: 10pt;
+  padding:0;
+  margin:10px 0;
+}
+.data-table table{
+  border-collapse:collapse;
+  border:1px solid #ddd;
+  border-radius:2px;
+}
+.page-data{
+  padding:3%;
+}
+input{
+  font-family: 'Open Sans', Sans-serif;
+  height:40px;
+  border:1px #bbb solid;
+  margin:0;
+  padding: 0;
+  border-radius: 3px;
+}
+input[type=text]{
+  width:200px;
+  border:1px #bbb solid;
+  font-size: 14pt;
+  padding: 0 5px;
+}
+input[type=button]{
+  width:100px;
+  background-color: #ccc;
+  color:white;
+  font-size: 14pt;
+  transition:0.3s;
+}
+input[type=button]:hover{
+  background-color: #c3c3c3;
+  border-color: #fff;
+  transition:0.3s;
+  cursor:pointer;
+}
+div.history{
+  padding: 0 3%;
+}
+.title{
+  color:#aaa;
+}
+.list-element{
+  margin:5px 0;
+  font-size: 11pt;
+}
+#map {
+  height: 600px;
+  width: 100%;
+}

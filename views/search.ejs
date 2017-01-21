@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%=title%></title>
+        <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
+        <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Tangerine">
+        <link rel="stylesheet" href="/../css/style.css">
+    </head>
+<body>
+    <div class="page-data">
+        <h3 class="title">Search for tweets:</h3>
+        <form method="post" action="" id="search-form">
+          <input id="search_string" type="text" name="search_string">
+          <input type="button" value="Search" onClick="search()">
+        </form>
+
+        <div class="err-area"></div>
+    </div>
+    <div class="history">
+        <h3 class="title">Previous:</h3>
+
+        <% if(data.length){ 
+                            
+            for(var i = 0;i < data.length;i++) { %>
+
+                <div class="list-element"><%=data[i].search_string%></div>
+
+            <% }
+
+        }else{ %>
+            <div class="list-element">No previous search</div>
+        <% } %>
+    </div>
+
+
+<script>
+
+    function search(){
+       
+        var searchString = $("#search_string").val();
+        console.log('val: ' + searchString);
+        console.log('ser: ' + $("#search-form").serialize());
+        $.ajax({
+
+            url:"/api/search/",
+            type:"post",
+            data:$("#search-form").serialize(),
+            success:function(res){
+                window.location.href = '/api/map/'+searchString;
+                return false;
+            },
+            error:function(xhr, status, error){
+                
+                console.log(xhr.responseText);
+                var err = '';
+                $.each(JSON.parse(xhr.responseText) , function(i, item) {
+                   
+                     err +='<div>'+item.msg+'</div>';
+                });
+                $(".err-area").html(err);    
+                return false;
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

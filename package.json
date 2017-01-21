@@ -1,0 +1,31 @@
+{
+  "name": "tweetmap",
+  "version": "1.0.0",
+  "description": "Show on a map where the latest tweet of a specified subject was published.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljungren/tweetmap.git"
+  },
+  "author": "Joakim Ljungren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ljungren/tweetmap/issues"
+  },
+  "homepage": "https://github.com/ljungren/tweetmap",
+  "dependencies": {
+    "twitter-node-client": "0.0.6",
+    "body-parser": "1.9.0",
+    "ejs": "^1.0.0",
+    "express": "4.9.5",
+    "express-myconnection": "*",
+    "express-validator": "^2.6.0",
+    "mysql": "*"
+  },
+  "devDependencies": {
+    "browserify": "^13.3.0"
+  }
+}
