@@ -6,6 +6,8 @@ var express  = require('express'),
     // twitter_interface = require('./interface');
 
 var config = require('./config.js');
+var Twitter = require('twitter-node-client').Twitter;
+var twitter = new Twitter(config.twitterApi);
 
 /*Set EJS template Engine*/
 app.set('views','./views');
@@ -72,6 +74,7 @@ api.post(function(req,res,next){
 
     var errors = req.validationErrors();
     if(errors){
+        console.log(errors);
         res.status(422).json(errors);
         return;
     }
@@ -81,33 +84,73 @@ api.post(function(req,res,next){
         search_string:req.body.search_string
     };
 
-    //get location of latest tweet containing string
-    console.log(config.twitterApi.consumerKey);
+    var userLocation = null;
+    var latLong = null;
 
-    //...
+    twitter.getSearch({'q': data.search_string,'count': 20, 'result_type': 'recent'}, function(err, response, body){
+        console.log('ERROR, ' + err);
+    }, 
+    function (searchData) {
+        var tweets = JSON.parse(searchData).statuses;
+        for(var i=0;i<tweets.length;i++){
+            var ul = tweets[i].user.location;
+            if(ul!=null || ul!=''){
+                if(/([A-Z]\w+|[A-Z]\w+\s\w+)\,\s([A-Za-z]\w+)/.test(ul)){
+                    userLocation = ul;
+                    console.log('userLocation: ' + ul);
+                }
+            }
+        }
+        if(userLocation!==null){
+            twitter.getCustomApiCall('/geo/search.json',
+                {'query': userLocation}, function(err, response, body){
+                console.log('ERROR, ' + err);
+            }, 
+            function (locData) {
+                latLong = JSON.stringify(JSON.parse(locData).result.places[0].bounding_box.coordinates[0][0]);
+                console.log('latLong: ' + latLong);
 
+                //save longitude and latitude in database
+                req.getConnection(function (err, conn){
 
+                    if (err) return next("Cannot Connect");
 
-    var location = 'placeholder';
+                    var query = conn.query("SELECT search_id FROM search_history " +
+                        "WHERE search_string = '" + data.search_string + "';", function(err, rows){
 
-    //save location and search_string, convert to gmaps format?
-    //inserting into mysql
-    req.getConnection(function (err, conn){
+                        if(err){
+                            console.log(err);
+                            return next("Mysql error, check your query");
+                        }
+                        else if(rows.length > 0){
+                            res.sendStatus(200);
+                        }
+                        else{
 
-        if (err) return next("Cannot Connect");
+                            req.getConnection(function (err, conn){
 
-        var query = conn.query("INSERT INTO search_history (search_string, location) " +
-            "VALUES ('" + data.search_string + "', '" + location + "');", function(err, rows){
+                                if (err) return next("Cannot Connect");
+                                
+                                var query = conn.query("INSERT INTO search_history (search_string, location) " +
+                                    "VALUES ('" + data.search_string + "', '" + latLong + "');", function(err, rows){
 
-           if(err){
-                console.log(err);
-                return next("Mysql error, check your query");
-           }
+                                    if(err){
+                                        console.log(err);
+                                        return next("Mysql error, check your query");
+                                    }
 
-          res.sendStatus(200);
+                                    res.sendStatus(200);
 
-        });
-
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+        }
+        else{
+            console.log('No location found');
+        }
     });
 });
 
@@ -116,7 +159,7 @@ var api2 = router.route('/map/:search_string');
 
 api2.all(function(req,res,next){
     //console.log("You want to do smth about api2 Route ? Do it here");
-    console.log(req.params);
+    //console.log(req.params);
     next();
 });
 
@@ -140,35 +183,11 @@ api2.get(function(req,res,next){
             if(rows.length < 1)
                 return res.send("No data found");
 
-            console.log('rows[0].location: '+ rows[0].location);
-
-            res.render('map',{title:"Tweetmap", data:rows, key:config.mapsApiKey});
+            res.render('map',{title:"Tweetmap", data:rows, search_string: search_string, key:config.mapsApiKey});
         });
 
     });
 
-});
-
-//delete data
-api2.delete(function(req,res,next){
-
-    var student_id = req.params.student_id;
-
-     req.getConnection(function (err, conn) {
-
-        if (err) return next("Cannot Connect");
-
-        var query = conn.query("DELETE FROM students WHERE student_id = ? ",[student_id], function(err, rows){
-
-             if(err){
-                console.log(err);
-                return next("Mysql error, check your query");
-             }
-
-             res.sendStatus(200);
-
-        });
-     });
 });
 
 //now we need to apply our router here
@@ -180,3 +199,4 @@ var server = app.listen(8000,function(){
    console.log("Listening to port %s",server.address().port);
 
 });
+

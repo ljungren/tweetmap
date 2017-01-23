@@ -19,18 +19,19 @@
     </div>
     <div class="history">
         <h3 class="title">Previous:</h3>
-
+        <form method="post" action="" id="prev-form">
         <% if(data.length){ 
                             
             for(var i = 0;i < data.length;i++) { %>
 
-                <div class="list-element"><%=data[i].search_string%></div>
+                <a href="#" onClick="prevSearch(this)" class="list-element" name="search_string"><%=data[i].search_string%></a><br>
 
             <% }
 
         }else{ %>
             <div class="list-element">No previous search</div>
         <% } %>
+        </form>
     </div>
 
 
@@ -39,8 +40,8 @@
     function search(){
        
         var searchString = $("#search_string").val();
-        console.log('val: ' + searchString);
-        console.log('ser: ' + $("#search-form").serialize());
+        console.log(searchString);
+
         $.ajax({
 
             url:"/api/search/",
@@ -48,6 +49,32 @@
             data:$("#search-form").serialize(),
             success:function(res){
                 window.location.href = '/api/map/'+searchString;
+                return false;
+            },
+            error:function(xhr, status, error){
+                
+                console.log(xhr.responseText);
+                var err = '';
+                $.each(JSON.parse(xhr.responseText) , function(i, item) {
+                   
+                     err +='<div>'+item.msg+'</div>';
+                });
+                $(".err-area").html(err);    
+                return false;
+            }
+        });
+    }
+
+        function prevSearch(element){
+
+        $('#search_string').html($(element).html());
+        $.ajax({
+
+            url:"/api/search/",
+            type:"post",
+            data:'search_string='+$(element).html(),
+            success:function(res){
+                window.location.href = '/api/map/'+$(element).html();
                 return false;
             },
             error:function(xhr, status, error){

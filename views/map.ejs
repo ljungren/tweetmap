@@ -8,23 +8,29 @@
     <link rel="stylesheet" href="/../css/style.css">
   </head>
   <body>
-    <h3>Most recent tweet about ... came from:</h3>
+    <a onClick="goBack()" href="#" class="backLink">< Search again</a>
+    <h3>A recent tweet containing '<span><%=search_string%></span>' came from:</h3>
     <div id="map"></div>
     <script>
 
-      console.log('location: <%=data[0].location%>');
-
       function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
+        var latLong = JSON.parse('<%=data[0].location%>');
+        var pos = {lat: latLong[1], lng: latLong[0]};
+
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 4,
-          center: uluru
+          center: pos
         });
         var marker = new google.maps.Marker({
-          position: uluru,
+          position: pos,
           map: map
         });
       }
+
+      function goBack(){
+        window.location.href = '/api/search/';
+      }
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=<%=key%>&callback=initMap">
