@@ -23,7 +23,6 @@ var connection  = require('express-myconnection'),
     mysql = require('mysql');
 
 app.use(
-
     connection(mysql,{
         host     : 'localhost',
         user     : 'root',
@@ -32,7 +31,6 @@ app.use(
         database : 'tweetmap',
         debug    : false //set true if you wanna see debug logger
     },'request')
-
 );
 
 //RESTful route
@@ -87,6 +85,7 @@ api.post(function(req,res,next){
     var userLocation = null;
     var latLong = null;
 
+    // Get tweets from string
     twitter.getSearch({'q': data.search_string,'count': 20, 'result_type': 'recent'}, function(err, response, body){
         console.log('ERROR, ' + err);
     }, 
@@ -95,6 +94,7 @@ api.post(function(req,res,next){
         for(var i=0;i<tweets.length;i++){
             var ul = tweets[i].user.location;
             if(ul!=null || ul!=''){
+                // Validate location format
                 if(/([A-Z]\w+|[A-Z]\w+\s\w+)\,\s([A-Za-z]\w+)/.test(ul)){
                     userLocation = ul;
                     console.log('userLocation: ' + ul);
@@ -102,6 +102,7 @@ api.post(function(req,res,next){
             }
         }
         if(userLocation!==null){
+            // Retrieve user location
             twitter.getCustomApiCall('/geo/search.json',
                 {'query': userLocation}, function(err, response, body){
                 console.log('ERROR, ' + err);
@@ -115,6 +116,7 @@ api.post(function(req,res,next){
 
                     if (err) return next("Cannot Connect");
 
+                    // Check if search has already been added to db 
                     var query = conn.query("SELECT search_id FROM search_history " +
                         "WHERE search_string = '" + data.search_string + "';", function(err, rows){
 
@@ -131,6 +133,7 @@ api.post(function(req,res,next){
 
                                 if (err) return next("Cannot Connect");
                                 
+                                // Add to db
                                 var query = conn.query("INSERT INTO search_history (search_string, location) " +
                                     "VALUES ('" + data.search_string + "', '" + latLong + "');", function(err, rows){
 
