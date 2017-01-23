@@ -54,8 +54,23 @@ div.history{
 .list-element{
   margin:5px 0;
   font-size: 11pt;
+  color:#bbb;
+  transition:0.3s;
+  text-decoration: none;
 }
 #map {
   height: 600px;
   width: 100%;
+}
+.backLink{
+  color:#bbb;
+  transition:0.3s;
+  text-decoration: none;
+}
+a:hover{
+  color:#2084EE;
+  transition:0.3s;
+}
+span{
+  color:#2084EE;
 }
