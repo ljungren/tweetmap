@@ -141,9 +141,8 @@ api.post(function(req,res,next){
                                         console.log(err);
                                         return next("Mysql error, check your query");
                                     }
-
+                                    console.log('sending res: ' + res);
                                     res.sendStatus(200);
-
                                 });
                             });
                         }

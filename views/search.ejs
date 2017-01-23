@@ -48,6 +48,7 @@
             type:"post",
             data:$("#search-form").serialize(),
             success:function(res){
+                console.log(res);
                 window.location.href = '/api/map/'+searchString;
                 return false;
             },
