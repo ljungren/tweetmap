@@ -145,7 +145,8 @@ api.post(function(req,res,next){
             });
         }
         else{
-            console.log('No location found');
+            res.status(422).json([{"param":"search_string","msg":"No search result found, try again","value":""}]);
+            return;
         }
     });
 });
