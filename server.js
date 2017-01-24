@@ -128,22 +128,16 @@ api.post(function(req,res,next){
                             res.sendStatus(200);
                         }
                         else{
-
-                            req.getConnection(function (err, conn){
-
-                                if (err) return next("Cannot Connect");
                                 
-                                // Add to db
-                                var query = conn.query("INSERT INTO search_history (search_string, location) " +
-                                    "VALUES ('" + data.search_string + "', '" + latLong + "');", function(err, rows){
+                            // Add to db
+                            var query = conn.query("INSERT INTO search_history (search_string, location) " +
+                                "VALUES ('" + data.search_string + "', '" + latLong + "');", function(err, rows){
 
-                                    if(err){
-                                        console.log(err);
-                                        return next("Mysql error, check your query");
-                                    }
-                                    console.log('sending res: ' + res);
-                                    res.sendStatus(200);
-                                });
+                                if(err){
+                                    console.log(err);
+                                    return next("Mysql error, check your query");
+                                }
+                                res.redirect('/api/map/'+data.search_string);
                             });
                         }
                     });

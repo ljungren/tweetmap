@@ -39,8 +39,7 @@
 
     function search(){
        
-        var searchString = $("#search_string").val();
-        console.log(searchString);
+        //var searchString = $("#search_string").val();
 
         $.ajax({
 
@@ -48,12 +47,11 @@
             type:"post",
             data:$("#search-form").serialize(),
             success:function(res){
-                console.log(res);
-                window.location.href = '/api/map/'+searchString;
+                //window.location.href = '/api/map/'+searchString;
                 return false;
             },
             error:function(xhr, status, error){
-                
+                console.log(status);
                 console.log(xhr.responseText);
                 var err = '';
                 $.each(JSON.parse(xhr.responseText) , function(i, item) {
