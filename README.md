@@ -39,8 +39,7 @@ Register your application and create a config.js:
           consumerKey: "...",
           consumerSecret: "...",
           accessToken: "...",
-          accessTokenSecret: "...",
-          callBackUrl: "..."
+          accessTokenSecret: "..."
         }
       }
 
