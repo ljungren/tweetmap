@@ -10,7 +10,7 @@ Show on a map where the latest tweet of a specified word was published. Using Tw
 
 ### Database
 
-Create a mysql database named 'tweetmap' with this table (db.sql):
+Create a mysql database with this table (db.sql):
 
       SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
