@@ -10,9 +10,7 @@ Show on a map where the latest tweet of a specified word was published. Using Tw
 
 ### Database
 
-Create a mysql database named 'tweetmap' with this table
-
-db.sql
+Create a mysql database named 'tweetmap' with this table (db.sql):
 
       SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 
@@ -23,7 +21,7 @@ db.sql
         PRIMARY KEY (`search_id`)
       );
 
-server.js
+configure your db specs in server.js:
 
       host: 'localhost',
       user: 'root',
@@ -33,7 +31,7 @@ server.js
 
 ### Twitter and Google Maps
 
-config.js
+Register your application and create a config.js:
       
       {
         mapsApiKey: '...',
@@ -52,4 +50,4 @@ config.js
 
 #### Access:
 
-    http://localhost:8000/
+    http://localhost:8000/api/search/
