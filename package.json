@@ -24,8 +24,5 @@
     "express-myconnection": "*",
     "express-validator": "^2.6.0",
     "mysql": "*"
-  },
-  "devDependencies": {
-    "browserify": "^13.3.0"
   }
 }
