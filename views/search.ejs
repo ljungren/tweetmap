@@ -3,8 +3,6 @@
     <head>
         <title><%=title%></title>
         <script type="text/javascript" src="/../js/jquery-1.10.2.min.js"></script>
-        <link rel="stylesheet" type="text/css"
-          href="https://fonts.googleapis.com/css?family=Tangerine">
         <link rel="stylesheet" href="/../css/style.css">
     </head>
 <body>
@@ -47,7 +45,7 @@
             type:"post",
             data:$("#search-form").serialize(),
             success:function(res){
-                //window.location.href = '/api/map/'+searchString;
+                window.location.href = '/api/map/'+res;
                 return false;
             },
             error:function(xhr, status, error){

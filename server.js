@@ -58,7 +58,7 @@ api.get(function(req,res,next){
                 return next("Mysql error, check your query");
             }
 
-            res.render('search',{title:"Tweetmap",data:rows});
+            return res.render('search',{title:"Tweetmap",data:rows});
 
         });
     });
@@ -125,7 +125,7 @@ api.post(function(req,res,next){
                             return next("Mysql error, check your query");
                         }
                         else if(rows.length > 0){
-                            res.sendStatus(200);
+                            return res.sendStatus(200);
                         }
                         else{
                                 
@@ -137,7 +137,8 @@ api.post(function(req,res,next){
                                     console.log(err);
                                     return next("Mysql error, check your query");
                                 }
-                                res.redirect('/api/map/'+data.search_string);
+                                return res.redirect('/api/map/'+data.search_string);
+                                //return res.status(200).send(data.search_string);
                             });
                         }
                     });
@@ -153,12 +154,6 @@ api.post(function(req,res,next){
 
 //now for map route
 var api2 = router.route('/map/:search_string');
-
-api2.all(function(req,res,next){
-    //console.log("You want to do smth about api2 Route ? Do it here");
-    //console.log(req.params);
-    next();
-});
 
 //get map with location
 api2.get(function(req,res,next){
@@ -177,10 +172,11 @@ api2.get(function(req,res,next){
                 console.log(err);
                 return next("Mysql error, check your query");
             }
-            if(rows.length < 1)
+            if(rows.length < 1){
                 return res.send("No data found");
+            }
 
-            res.render('map',{title:"Tweetmap", data:rows, search_string: search_string, key:config.mapsApiKey});
+            return res.render('map',{title:"Tweetmap", data:rows, search_string: search_string, key:config.mapsApiKey});
         });
 
     });
@@ -191,7 +187,7 @@ api2.get(function(req,res,next){
 app.use('/api', router);
 
 //start Server
-var server = app.listen(8000,function(){
+var server = app.listen(9000,function(){
 
    console.log("Listening to port %s",server.address().port);
 
